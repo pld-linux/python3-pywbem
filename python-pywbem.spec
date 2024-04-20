@@ -1,7 +1,6 @@
-# TODO: fix docs
 #
 # Conditional build:
-%bcond_with	doc	# Sphinx documentation
+%bcond_without	doc	# Sphinx documentation
 %bcond_without	tests	# unit/functional tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
@@ -9,13 +8,13 @@
 Summary:	WBEM client and related utilities, written in pure Python
 Summary(pl.UTF-8):	Klient WBEM i powiązane narzędzia, napisane w czystym Pythonie
 Name:		python-pywbem
-Version:	1.6.2
+Version:	1.6.3
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries/Python
 #Source0Download: https://github.com/pywbem/pywbem/releases
 Source0:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-%{version}.tar.gz
-# Source0-md5:	de074ebc8992261ab65ae1fcc916d3ce
+# Source0-md5:	ffa60afdf59fb2c655426e1628853203
 Patch0:		pywbem-no-wheel.patch
 URL:		https://github.com/pywbem/pywbem
 %if %{with python2}
@@ -28,8 +27,8 @@ BuildRequires:	python-PyYAML >= 5.3
 BuildRequires:	python-funcsigs >= 1.0.2
 BuildRequires:	python-httpretty >= 0.9.5
 BuildRequires:	python-importlib_metadata >= 0.12
-#BuildRequires:	python-importlib_metadata < 1
-BuildRequires:	python-lxml >= 4.2.4
+BuildRequires:	python-importlib_metadata < 5
+BuildRequires:	python-lxml >= 4.6.2
 BuildRequires:	python-mock >= 2.0.0
 BuildRequires:	python-packaging >= 16.6
 BuildRequires:	python-ply >= 3.10
@@ -48,11 +47,13 @@ BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-PyYAML >= 5.1
 BuildRequires:	python3-httpretty >= 0.9.5
-%if "%{_ver_lt '%{py3_ver}' < '3.7'}" == "1"
+%if "%{_ver_lt '%{py3_ver}' < '3.8'}" == "1"
 BuildRequires:	python3-importlib_metadata >= 0.12
-BuildRequires:	python3-importlib_metadata < 1
+BuildRequires:	python3-importlib_metadata < 5
+%else
+BuildRequires:	python3-importlib_metadata >= 4.8.3
 %endif
-BuildRequires:	python3-lxml >= 4.4.3
+BuildRequires:	python3-lxml >= 4.6.2
 BuildRequires:	python3-packaging >= 16.6
 BuildRequires:	python3-ply >= 3.10
 BuildRequires:	python3-pytest >= 4.4.0
@@ -66,9 +67,10 @@ BuildRequires:	python3-yamlloader >= 0.5.5
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.749
 %if %{with doc}
+BuildRequires:	python3-autodocsumm >= 0.2.12
 BuildRequires:	python3-sphinx_git >= 10.1.1
 BuildRequires:	python3-sphinxcontrib-fulltoc >= 1.2.0
-BuildRequires:	sphinx-pdg-3 >= 1.7.6
+BuildRequires:	sphinx-pdg-3 >= 4.5
 %endif
 Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
