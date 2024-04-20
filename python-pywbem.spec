@@ -9,15 +9,14 @@
 Summary:	WBEM client and related utilities, written in pure Python
 Summary(pl.UTF-8):	Klient WBEM i powiązane narzędzia, napisane w czystym Pythonie
 Name:		python-pywbem
-Version:	0.17.6
+Version:	1.6.2
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries/Python
 #Source0Download: https://github.com/pywbem/pywbem/releases
 Source0:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-%{version}.tar.gz
-# Source0-md5:	af567dee3476334a232d8e5ccb7db632
-Patch0:		pywbem-mock.patch
-Patch1:		pywbem-threading.patch
+# Source0-md5:	de074ebc8992261ab65ae1fcc916d3ce
+Patch0:		pywbem-no-wheel.patch
 URL:		https://github.com/pywbem/pywbem
 %if %{with python2}
 BuildRequires:	python-modules >= 1:2.7
@@ -111,7 +110,6 @@ Dokumentacja API modułu Pythona pywbem.
 %prep
 %setup -q -n pywbem-%{version}
 %patch0 -p1
-%patch1 -p1
 
 %{__sed} -i -e 's/\.\. git_changelog::/(missing git changelog)/' docs/changes.rst
 
@@ -151,8 +149,6 @@ install -d $RPM_BUILD_ROOT%{_examplesdir}
 %py_install
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/mof_compiler{,-2}
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/wbemcli{,-2}
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/wbemcli.py $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 
@@ -166,8 +162,6 @@ cp -pr examples $RPM_BUILD_ROOT%{_examplesdir}/python-pywbem-%{version}
 %py3_install
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/mof_compiler{,-3}
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/wbemcli{,-3}
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/wbemcli.py $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 
@@ -185,8 +179,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.rst TODO.md
 %attr(755,root,root) %{_bindir}/mof_compiler-2
-%attr(755,root,root) %{_bindir}/wbemcli-2
-%{py_sitescriptdir}/wbemcli.py[co]
 %{py_sitescriptdir}/pywbem
 %{py_sitescriptdir}/pywbem_mock
 %{py_sitescriptdir}/pywbem-%{version}-py*.egg-info
@@ -198,9 +190,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.rst TODO.md
 %attr(755,root,root) %{_bindir}/mof_compiler-3
-%attr(755,root,root) %{_bindir}/wbemcli-3
-%{py3_sitescriptdir}/wbemcli.py
-%{py3_sitescriptdir}/__pycache__/wbemcli.cpython-*.py[co]
 %{py3_sitescriptdir}/pywbem
 %{py3_sitescriptdir}/pywbem_mock
 %{py3_sitescriptdir}/pywbem-%{version}-py*.egg-info

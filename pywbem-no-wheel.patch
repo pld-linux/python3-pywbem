@@ -1,0 +1,15 @@
+--- pywbem-1.6.2/setup.py.orig	2023-08-21 13:17:29.000000000 +0200
++++ pywbem-1.6.2/setup.py	2023-09-28 20:44:04.250106035 +0200
+@@ -230,11 +230,7 @@ class bdist_wheel(bdist_wheel_base):
+     The handling of the option is in the module level code because it needs
+     to change the setuptools.setup() arguments.
+     """
+-    if bdist_wheel_base is object:
+-        raise ImportError("wheel package is not installed and bdist_wheel "
+-                          "command is used")
+-
+-    user_options = bdist_wheel_base.user_options + [
++    user_options = getattr(bdist_wheel_base, "user_options", []) + [
+         # (long option, short option, description)
+         ('cythonized', None,
+          'pywbem: Make a cythonized wheel (default: uncythonized wheel)'),
