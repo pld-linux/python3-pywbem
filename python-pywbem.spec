@@ -111,7 +111,7 @@ Dokumentacja API modułu Pythona pywbem.
 
 %prep
 %setup -q -n pywbem-%{version}
-%patch0 -p1
+%patch -P 0 -p1
 
 %{__sed} -i -e 's/\.\. git_changelog::/(missing git changelog)/' docs/changes.rst
 
