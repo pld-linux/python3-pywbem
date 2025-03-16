@@ -8,13 +8,13 @@
 Summary:	WBEM client and related utilities, written in pure Python
 Summary(pl.UTF-8):	Klient WBEM i powiązane narzędzia, napisane w czystym Pythonie
 Name:		python-pywbem
-Version:	1.7.2
-Release:	3
+Version:	1.7.3
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries/Python
 #Source0Download: https://github.com/pywbem/pywbem/releases
 Source0:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-%{version}.tar.gz
-# Source0-md5:	acdd644ca6cb8bac6a016afcd4410f78
+# Source0-md5:	a88e93a95ed363003b2f7f504c7662c7
 Patch0:		pywbem-no-wheel.patch
 URL:		https://github.com/pywbem/pywbem
 %if %{with python2}
