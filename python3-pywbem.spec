@@ -40,7 +40,7 @@ BuildRequires:	python3-sphinx_git >= 10.1.1
 BuildRequires:	python3-sphinxcontrib-fulltoc >= 1.2.0
 BuildRequires:	sphinx-pdg-3 >= 4.5
 %endif
-Requires:	python-modules >= 1:2.7
+Requires:	python3-modules >= 1:3.6
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
