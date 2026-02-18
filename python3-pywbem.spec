@@ -1,46 +1,68 @@
 #
 # Conditional build:
 %bcond_without	doc	# Sphinx documentation
-%bcond_with	tests	# unit/functional tests
+%bcond_without	tests	# unit/functional tests
 
 Summary:	WBEM client and related utilities, written in pure Python
 Summary(pl.UTF-8):	Klient WBEM i powiązane narzędzia, napisane w czystym Pythonie
 Name:		python3-pywbem
-Version:	1.7.3
-Release:	2
+Version:	1.9.0
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries/Python
-#Source0Download: https://github.com/pywbem/pywbem/releases
-Source0:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-%{version}.tar.gz
-# Source0-md5:	a88e93a95ed363003b2f7f504c7662c7
-Patch0:		pywbem-no-wheel.patch
+#Source0Download: https://pypi.org/simple/pywbem/
+# git archive doesn't contain proper version information, use sdist to build
+Source0:	https://files.pythonhosted.org/packages/source/p/pywbem/pywbem-%{version}.tar.gz
+# Source0-md5:	a7314a81f0fb5db2b6a3619310379102
+# ...but sdist is missing docs dir, use git archive for them
+Source1:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-archive-%{version}.tar.gz
+# Source1-md5:	112f64fb89e73d8909dee5c0e054b391
 URL:		https://github.com/pywbem/pywbem
-BuildRequires:	python3-FormEncode >= 2.0.0
-BuildRequires:	python3-modules >= 1:3.6
-BuildRequires:	python3-setuptools
+BuildRequires:	python3-build >= 1.1.1
+BuildRequires:	python3-installer
+BuildRequires:	python3-modules >= 1:3.9
+BuildRequires:	python3-setuptools >= 1:78.1.1
+BuildRequires:	python3-setuptools_scm >= 9.2.0
+BuildRequires:	python3-wheel >= 0.41.3
 %if %{with tests}
-BuildRequires:	python3-PyYAML >= 5.1.1
-BuildRequires:	python3-httpretty >= 0.9.5
+BuildRequires:	python3-FormEncode >= 2.1.1
+BuildRequires:	python3-PyYAML >= 6.0.2
+BuildRequires:	python3-certifi >= 2024.07.04
+BuildRequires:	python3-colorama >= 0.4.5
+BuildRequires:	python3-cryptography >= 43.0.1
+BuildRequires:	python3-decorator >= 4.0.11
+BuildRequires:	python3-easy-server >= 0.8.0
+BuildRequires:	python3-easy-vault >= 0.7.0
+BuildRequires:	python3-idna >= 3.7
 BuildRequires:	python3-importlib_metadata >= 4.8.3
-BuildRequires:	python3-lxml >= 4.6.2
-BuildRequires:	python3-packaging >= 16.6
+BuildRequires:	python3-jsonschema >= 4.18.0
+BuildRequires:	python3-keyring >= 18.0.0
+BuildRequires:	python3-lxml >= 6.0.2
+BuildRequires:	python3-packaging >= 24.2
+BuildRequires:	python3-pluggy >= 1.3.0
 BuildRequires:	python3-ply >= 3.10
-BuildRequires:	python3-pytest >= 4.4.0
-BuildRequires:	python3-pytz >= 2019.1
-BuildRequires:	python3-requests >= 2.25.0
-BuildRequires:	python3-six >= 1.16.0
+BuildRequires:	python3-pytest >= 8.0.2
+BuildRequires:	python3-pytest-easy-server >= 0.8.0
+BuildRequires:	python3-requests >= 2.32.4
+BuildRequires:	python3-requests-mock >= 1.6.0
+BuildRequires:	python3-requests-toolbelt >= 0.8.0
 BuildRequires:	python3-testfixtures >= 6.9.0
+BuildRequires:	python3-typing_extensions >= 4.14.1
+BuildRequires:	python3-urllib3 >= 2.6.0
+BuildRequires:	python3-yagot >= 0.5.0
 BuildRequires:	python3-yamlloader >= 0.5.5
 %endif
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.749
+BuildRequires:	rpmbuild(macros) >= 2.044
 %if %{with doc}
 BuildRequires:	python3-autodocsumm >= 0.2.12
+BuildRequires:	python3-docutils >= 0.18.1
 BuildRequires:	python3-sphinx_git >= 10.1.1
+BuildRequires:	python3-sphinx_rtd_theme >= 2.0.0
 BuildRequires:	python3-sphinxcontrib-fulltoc >= 1.2.0
-BuildRequires:	sphinx-pdg-3 >= 4.5
+BuildRequires:	sphinx-pdg-3 >= 7.2.4
 %endif
-Requires:	python3-modules >= 1:3.6
+Requires:	python3-modules >= 1:3.9
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -64,13 +86,13 @@ API documentation for Python pywbem module.
 Dokumentacja API modułu Pythona pywbem.
 
 %prep
-%setup -q -n pywbem-%{version}
-%patch -P 0 -p1
+%setup -q -n pywbem-%{version} -a1
 
-%{__sed} -i -e 's/\.\. git_changelog::/(missing git changelog)/' docs/changes.rst
+%{__mv} pywbem-%{version}/{docs,examples,SECURITY.md,TODO.md} .
+%{__rm} -r pywbem-%{version}
 
 %build
-%py3_build
+%py3_build_pyproject
 
 %if %{with tests}
 PATH=$(pwd):$PATH \
@@ -80,7 +102,9 @@ PYTHONPATH=$(pwd) \
 %endif
 
 %if %{with doc}
+# setuptools_scm cannot detect version without git checkout when in subdir, so give a hint
 PYTHONPATH=$(pwd) \
+SETUPTOOLS_SCM_PRETEND_VERSION="%{version}" \
 sphinx-build-3 -b html docs docs/_build/html
 %endif
 
@@ -88,11 +112,9 @@ sphinx-build-3 -b html docs docs/_build/html
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_examplesdir}
 
-%py3_install
+%py3_install_pyproject
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/mof_compiler{,-3}
-%py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
-%py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 
 cp -pr examples $RPM_BUILD_ROOT%{_examplesdir}/python3-pywbem-%{version}
 %{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{_examplesdir}/python3-pywbem-%{version}/*.py
@@ -104,15 +126,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.md SECURITY.md TODO.md
+%doc AUTHORS.md README.md SECURITY.md TODO.md
 %attr(755,root,root) %{_bindir}/mof_compiler-3
 %{py3_sitescriptdir}/pywbem
 %{py3_sitescriptdir}/pywbem_mock
-%{py3_sitescriptdir}/pywbem-%{version}-py*.egg-info
+%{py3_sitescriptdir}/pywbem-%{version}.dist-info
 %{_examplesdir}/python3-pywbem-%{version}
 
 %if %{with doc}
 %files apidocs
 %defattr(644,root,root,755)
-%doc docs/_build/html/{_images,_modules,_static,client,*.html,*.js}
+%doc docs/_build/html/{_modules,_static,client,*.html,*.js}
 %endif
