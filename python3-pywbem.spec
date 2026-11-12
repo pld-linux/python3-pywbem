@@ -6,49 +6,49 @@
 Summary:	WBEM client and related utilities, written in pure Python
 Summary(pl.UTF-8):	Klient WBEM i powiązane narzędzia, napisane w czystym Pythonie
 Name:		python3-pywbem
-Version:	1.9.0
+Version:	1.9.1
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pywbem/
 # git archive doesn't contain proper version information, use sdist to build
 Source0:	https://files.pythonhosted.org/packages/source/p/pywbem/pywbem-%{version}.tar.gz
-# Source0-md5:	a7314a81f0fb5db2b6a3619310379102
+# Source0-md5:	377c39ee4c84065122a8e8d80f365e26
 # ...but sdist is missing docs dir, use git archive for them
 Source1:	https://github.com/pywbem/pywbem/archive/%{version}/pywbem-archive-%{version}.tar.gz
-# Source1-md5:	112f64fb89e73d8909dee5c0e054b391
+# Source1-md5:	1a53e61443db494d2bc014ad2c46fa8b
 URL:		https://github.com/pywbem/pywbem
 BuildRequires:	python3-build >= 1.1.1
 BuildRequires:	python3-installer
 BuildRequires:	python3-modules >= 1:3.9
-BuildRequires:	python3-setuptools >= 1:78.1.1
+BuildRequires:	python3-setuptools >= 1:82.0.0
 BuildRequires:	python3-setuptools_scm >= 9.2.0
-BuildRequires:	python3-wheel >= 0.41.3
+BuildRequires:	python3-wheel >= 0.46.2
 %if %{with tests}
 BuildRequires:	python3-FormEncode >= 2.1.1
 BuildRequires:	python3-PyYAML >= 6.0.2
 BuildRequires:	python3-certifi >= 2024.07.04
 BuildRequires:	python3-colorama >= 0.4.5
-BuildRequires:	python3-cryptography >= 43.0.1
+BuildRequires:	python3-cryptography >= 48.0.1
 BuildRequires:	python3-decorator >= 4.0.11
 BuildRequires:	python3-easy-server >= 0.8.0
 BuildRequires:	python3-easy-vault >= 0.7.0
-BuildRequires:	python3-idna >= 3.7
+BuildRequires:	python3-idna >= 3.15
 BuildRequires:	python3-importlib_metadata >= 4.8.3
 BuildRequires:	python3-jsonschema >= 4.18.0
 BuildRequires:	python3-keyring >= 18.0.0
-BuildRequires:	python3-lxml >= 6.0.2
+BuildRequires:	python3-lxml >= 6.1.0
 BuildRequires:	python3-packaging >= 24.2
-BuildRequires:	python3-pluggy >= 1.3.0
+BuildRequires:	python3-pluggy >= 1.5.0
 BuildRequires:	python3-ply >= 3.10
-BuildRequires:	python3-pytest >= 8.0.2
+BuildRequires:	python3-pytest >= 9.0.3
 BuildRequires:	python3-pytest-easy-server >= 0.8.0
-BuildRequires:	python3-requests >= 2.32.4
+BuildRequires:	python3-requests >= 2.33.0
 BuildRequires:	python3-requests-mock >= 1.6.0
 BuildRequires:	python3-requests-toolbelt >= 0.8.0
 BuildRequires:	python3-testfixtures >= 6.9.0
 BuildRequires:	python3-typing_extensions >= 4.14.1
-BuildRequires:	python3-urllib3 >= 2.6.0
+BuildRequires:	python3-urllib3 >= 2.7.0
 BuildRequires:	python3-yagot >= 0.5.0
 BuildRequires:	python3-yamlloader >= 0.5.5
 %endif
